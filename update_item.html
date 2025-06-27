@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>პოსტის რედაქტირება</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s" type="image/png">
+    <style>
+        body {
+            background: linear-gradient(135deg, #330000, #660000);
+            color: white;
+            font-family: "ALK Sanet", sans-serif;
+        }
+
+        .main-box {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px 40px;
+            background-color: #2c0000;
+            border-radius: 12px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+        }
+
+        label {
+            font-weight: bold;
+            color: #ff9999;
+        }
+
+        .form-control {
+            background-color: #4a0000;
+            border-color: #a70000;
+            color: white;
+        }
+
+        .form-control:focus {
+            background-color: #4a0000;
+            color: white;
+            box-shadow: 0 0 5px #ff1a1a;
+        }
+
+        .btn-success {
+            background-color: #a70000;
+            border-color: #ff1a1a;
+        }
+
+        .btn-success:hover {
+            background-color: #ff1a1a;
+            border-color: #ff3333;
+        }
+
+        h3 {
+            color: #ffd6d6;
+        }
+        .category-select {
+    background-color: #2c0000;
+    border: 1px solid #a70000;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px;
+    height: auto;
+    font-size: 15px;
+}
+
+.category-select option {
+    background-color: #1a0000;
+    color: white;
+    font-family: "ALK Sanet", sans-serif;
+    font-weight: 600;
+    padding: 5px;
+    border-bottom: 1px solid #4a0000;
+}
+
+    </style>
+</head>
+<body>
+{% include 'admin_header.html' %}
+
+<div class="main-box">
+    <h3 class="mb-4">პოსტის რედაქტირება</h3>
+
+    <form action="{{ url_for('update_item', id=post['id']) }}" method="POST">
+
+        <div class="form-group">
+            <label>სათაური</label>
+            <input type="text" class="form-control" name="title" placeholder="ჩაწერეთ პოსტის სათაური" value="{{ post['title'] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>აღწერა</label>
+            <input type="text" class="form-control" name="short_description" placeholder="ჩაწერეთ მოკლე აღწერა" value="{{ post['short_description'] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>პოსტის შინაარსი</label>
+            <textarea class="form-control" name="description" rows="3" required>{{ post['description'] }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>პოსტის პირველი ნაწილი</label>
+            <textarea class="form-control" name="post_part1" rows="3">{{ post['post_part1'] }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>პოსტის მეორე ნაწილი</label>
+            <textarea class="form-control" name="post_part2" rows="3">{{ post['post_part2'] }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>ავტორი</label>
+            <input class="form-control" name="author" placeholder="დაწერეთ ავტორი" value="{{ post['author'] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>ფოტოს ლინკი</label>
+            <input class="form-control" name="imageURL" placeholder="ფოტოს ლინკი" value="{{ post['imageURL'] }}" required>
+        </div>
+
+        <div class="form-group">
+    <label for="category">კატეგორია</label>
+    <select class="form-control category-select" name="category" id="category" required>
+        <option value="" disabled {% if not post['category'] %}selected{% endif %}>აირჩიე კატეგორია</option>
+        {% for cat in categories %}
+            <option value="{{ cat }}" {% if post['category'] == cat %}selected{% endif %}>
+                {{ cat }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+
+
+        <button type="submit" class="btn btn-success btn-block">რედაქტირება</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

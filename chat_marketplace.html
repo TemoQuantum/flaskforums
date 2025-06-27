@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ჩათი - Marketplace</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+  <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/archyedt-bold/css/archyedt-bold.min.css">
+  <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    * { box-sizing: border-box; }
+    .vip-glow { color: #ffd700 !important; font-weight: bold; text-shadow: 0 0 5px #ffd700, 0 0 10px #ffc400; }
+    .respected-glow { color: #d8b2ff !important; font-weight: bold; text-shadow: 0 0 5px #c379ff, 0 0 10px #bf00ff; }
+    .admin-glow { color: #ff4d4d !important; font-weight: bold; text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a; }
+    html, body { height: 100%; margin: 0; font-family: 'VT323', monospace; background: #1a0000; color: #fff; }
+    .chat-box { display: flex; flex-direction: column; height: 90vh; width: 100%; background: #2a0000; border: none; }
+    .chat-header { background: #440000; color: #ff4444; padding: 16px; font-size: 2.5rem; text-align: center; border-bottom: 2px solid #ff0000; }
+    #chat { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    .msg { max-width: 70%; padding: 12px 16px; border-radius: 10px; background: #550000; font-size: 1.4rem; position: relative; animation: fadeIn 0.3s ease; }
+    .msg.own { align-self: flex-end; background: #ff3333; color: #000; }
+    .msg .username { font-weight: bold; font-size: 1.2rem; margin-bottom: 6px; }
+    .msg .time { font-size: 0.9rem; color: #ccc; margin-top: 6px; }
+    .msg.own .time { color: #333; }
+    .chat-media { max-width: 300px; max-height: 300px; border-radius: 8px; margin-top: 8px; border: 2px solid #ff4444; display: block; }
+    .input-area { display: flex; padding: 16px; background: #440000; border-top: 2px solid #ff0000; align-items: center; }
+    #msg { flex: 1; padding: 12px 16px; border: none; border-radius: 6px; background: #1a0000; color: #fff; font-size: 1.3rem; font-family: 'VT323', monospace; outline: none; }
+    #msg::placeholder { color: #aa7777; }
+    .icon-btn { background: none; border: none; color: #ff4444; font-size: 1.5rem; margin-left: 12px; cursor: pointer; transition: transform 0.2s ease; }
+    .icon-btn:hover { transform: scale(1.2); color: #ff7777; }
+    #mediafile { display: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+{% include 'chatheader.html' %}
+
+<div class="chat-box">
+  <div class="chat-header">LiveChat</div>
+  <div id="chat"></div>
+  <div class="input-area">
+    <input type="text" id="msg" placeholder="Type your message..." maxlength="500" autocomplete="off">
+    <button class="icon-btn" id="uploadBtn" title="Upload Media"><i class="bi bi-paperclip"></i></button>
+    <input type="file" id="mediafile" accept="image/*,video/*">
+    <button class="icon-btn" onclick="send()" title="Send Message"><i class="bi bi-send-fill"></i></button>
+  </div>
+</div>
+
+<script>
+  const socket = io();
+  const chat = document.getElementById('chat');
+  const msgInput = document.getElementById('msg');
+  const mediaInput = document.getElementById('mediafile');
+  const uploadBtn = document.getElementById('uploadBtn');
+
+  function addMessage(m) {
+    const div = document.createElement('div');
+    div.classList.add('msg');
+    if (m.user === "{{ username }}") div.classList.add('own');
+
+    let mediaContent = '';
+    if (m.media_url && m.media_type) {
+      if (m.media_type === 'image') {
+        mediaContent = `<img src="${m.media_url}" class="chat-media" alt="uploaded media">`;
+      } else if (m.media_type === 'video') {
+        mediaContent = `<video controls class="chat-media" src="${m.media_url}"></video>`;
+      }
+    }
+
+    const userSpan = `<div class="username ${m.style_class || ''}">${m.user}</div>`;
+    const textDiv = m.msg ? `<div class="text">${m.msg}</div>` : '';
+    const timeDiv = `<div class="time">${m.time}</div>`;
+
+    div.innerHTML = userSpan + textDiv + mediaContent + timeDiv;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function send() {
+    const msg = msgInput.value.trim();
+    if (msg.length > 0) {
+      socket.emit('send_marketplace', { msg: msg });
+      msgInput.value = '';
+    }
+  }
+
+  uploadBtn.addEventListener('click', () => {
+    mediaInput.click();
+  });
+
+  mediaInput.addEventListener('change', () => {
+    const file = mediaInput.files[0];
+    if (!file) { return; }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch('/upload_media', { method: 'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if (data.url && data.media_type) {
+          socket.emit('send_hacking', { media_url: data.url, media_type: data.media_type });
+        } else {
+          alert(data.error || 'Upload failed.');
+        }
+        mediaInput.value = '';
+      })
+      .catch(() => {
+        alert('Upload failed.');
+        mediaInput.value = '';
+      });
+  });
+
+  msgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') send();
+  });
+
+  socket.on('marketplace_message', m => addMessage(m));
+  socket.on('clear', () => { chat.innerHTML = ''; });
+  socket.on('connect', () => { socket.emit('load'); });
+</script>
+
+</body>
+</html>

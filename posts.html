@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malebranche - პოსტები</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s">
+
+    <style>
+        html, body {
+            background: linear-gradient(135deg, #1a0000, #330000);
+            font-family: "ALK Sanet", sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-box {
+            width: 90%;
+            margin: 40px auto;
+        }
+
+        .content-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        .filter-box {
+            background-color: #2a0000;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .form-check-label, .filter-box h5 {
+            color: white;
+        }
+
+        .btn-filter {
+            margin-top: 10px;
+        }
+
+        .card-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 35px;
+            justify-content: center;
+        }
+
+        .card {
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid transparent;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: popIn 0.6s ease-out forwards;
+            transition: all 0.4s ease;
+        }
+
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .card-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+            padding: 1.5rem;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.8) 50%, transparent 100%);
+            transform: translateY(30%);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover {
+            border-color: #ff3c3c;
+            box-shadow: 0 15px 50px rgba(255, 60, 60, 0.4);
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card:hover .card-body {
+            transform: translateY(0);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .badge {
+            background-color: #ff3c3c;
+            font-size: 0.75rem;
+            font-weight: normal;
+        }
+
+        .card-text {
+            color: #ccc;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover .card-text {
+            opacity: 1;
+        }
+
+        .card-text small {
+            color: #999;
+            font-style: italic;
+            display: block;
+        }
+
+        .btn-read-more {
+            background-color: #a70000;
+            border: none;
+            font-weight: bold;
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .card:hover .btn-read-more {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-add-post {
+            background-color: #ff3c3c;
+            border: none;
+            font-weight: bold;
+            color: white;
+            border-radius: 6px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-post:hover {
+            background-color: #d10000;
+            transform: scale(1.05);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        #addpost{
+            background-color: darkred;
+            margin-left: 800px;
+        }
+    </style>
+</head>
+<body>
+
+{% include "header.html" %}
+
+<div class="main-box">
+    <div class="top-bar">
+        <a href="/profile/addpost" class="btn btn-add-post" id="addpost">+ პოსტის დამატება</a>
+    </div>
+
+    <div class="content-layout">
+        <!-- Filter Sidebar -->
+        <div class="filter-box">
+            <form method="get" action="{{ url_for('posts') }}">
+                <h5 class="mb-3">კატეგორიები</h5>
+
+                {% set categories = ['carding', 'hacking', 'cracking', 'leaks', 'offtopic'] %}
+                {% for cat in categories %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="category" value="{{ cat }}"
+                           {% if cat in selected_categories %}checked{% endif %}>
+                    <label class="form-check-label">{{ cat }}</label>
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-sm btn-light btn-filter">გაფილტვრა</button>
+                <a href="{{ url_for('posts') }}" class="btn btn-sm btn-outline-light btn-filter">ფილტრის წაშლა</a>
+            </form>
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="card-box">
+            {% for post in posts %}
+            <div class="card" style="animation-delay: {{ loop.index0 * 0.07 }}s;">
+                <img class="card-image" src="{{ post['imageURL'] }}" alt="Post Image">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">
+                            {{ post['title'] }}
+                            <span class="badge ml-2 text-uppercase">{{ post['category'] }}</span>
+                        </h5>
+                        <p class="card-text">
+                            {{ post['short_description'] }}
+                            <small>ავტორი: {{ post['author'] }}</small>
+                        </p>
+                    </div>
+                    <a href="/posts/{{ post['id'] }}" class="btn btn-read-more btn-block">წაკითხვა</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include "footer.html" %}
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

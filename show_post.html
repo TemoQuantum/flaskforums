@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ post.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+  <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body {
+      color: #F4E2D8;
+      font-family: "ALK Sanet", sans-serif;
+      flex: 1;
+    }
+
+    .main-box {
+      width: 90%;
+      max-width: 900px;
+      margin: 3% auto;
+      flex: 1;
+    }
+
+    .post-card {
+      background-color: #1a0000;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 12px #3d0000;
+      margin-bottom: 40px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px #ff3333;
+    }
+
+    .vip-glow {
+        color: #ffd700 !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #ffd700, 0 0 10px #ffc400;
+    }
+    .respected-glow {
+        color: #d8b2ff !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #c379ff, 0 0 10px #bf00ff;
+    }
+    .admin-glow {
+        color: #ff4d4d !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a;
+    }
+    .post-title {
+      color: #FF5C5C;
+      font-size: 32px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .post-meta {
+      margin-bottom: 25px;
+    }
+
+    .post-meta img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #FF5C5C;
+      margin-bottom: 10px;
+    }
+
+    .post-author {
+      color: #bbb;
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .post-content {
+      font-size: 18px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      text-align: justify;
+    }
+
+    .section-label {
+      font-size: 20px;
+      color: #FF8C8C;
+      margin-top: 10px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      text-shadow: 0 0 5px #FF5C5C;
+    }
+
+    footer {
+      background-color: #1a0000;
+      color: #888;
+      text-align: center;
+      padding: 12px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-box">
+    <div class="post-card">
+      <div class="post-title">{{ post.title }}</div>
+
+      <div class="post-meta">
+        <img src="{{ post.imageURL }}" alt="Post Image">
+        <div class="post-author">ავტორი: {{ post.author }}</div>
+      </div>
+
+      <div class="post-content">
+
+        {{ post.short_description }}
+
+        {{ post.description }}
+
+        {{ post.post_part1 }}
+        {{ post.post_part2 }}
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

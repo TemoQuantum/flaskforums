@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FisoForums - პროფილი</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/archyedt-bold/css/archyedt-bold.min.css">
+    <link rel="icon" type="image/png"
+          href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        :root { --red: #ff1a1a; --dark-red: #a70000; --background: #0d0d0d; --surface: #1a1a1a; }
+        @keyframes pop-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        body { background: linear-gradient(135deg, #1a0000, #330000); font-family: "ALK Sanet", sans-serif; color: white; }
+        .profile-container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
+        .profile-header { background-color: var(--surface); border: 1px solid var(--dark-red); margin-bottom: 20px; padding-bottom: 80px; position: relative; animation: pop-in 0.6s ease-out forwards; box-shadow: 0 0 25px rgba(0,0,0,0.5); border-radius: 8px; }
+        .profile-banner { height: 220px; background-size: cover; background-position: center; border-radius: 8px 8px 0 0; background-image: url('{{ user.banner_url or "https://wallpapercave.com/wp/wp4984244.jpg" }}'); }
+        .profile-avatar-wrapper { position: absolute; left: 40px; top: 140px; }
+        .profile-avatar { width: 150px; height: 150px; border-radius: 50%; border: 6px solid var(--background); object-fit: cover; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        .profile-info { margin-left: 210px; margin-top: 15px; }
+        .profile-username { font-size: 2.5rem; font-weight: bold; color: #fff; text-shadow: 0 0 10px var(--red); }
+        .profile-bio { font-size: 1rem; color: #ccc; margin-top: 5px; font-style: italic; }
+        .edit-profile-btn { position: absolute; right: 20px; top: 180px; background-color: rgba(0,0,0,0.5); border: 1px solid var(--red); color: white !important; }
+        .edit-profile-btn:hover { background-color: var(--red); }
+        .content-title { font-family: "ArchyEDT-Bold", sans-serif; font-size: 2.5rem; text-align: center; margin-top: 60px; margin-bottom: 30px; color: white; text-shadow: 0 0 15px var(--red); }
+        .card-box { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 35px; }
+        .card { height: 400px; border-radius: 16px; overflow: hidden; position: relative; border: 2px solid transparent; box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5); opacity: 0; animation: pop-in 0.6s ease-out forwards; transition: all 0.4s ease; }
+        .card:hover { border-color: #ff3c3c; box-shadow: 0 15px 50px 0 rgba(255, 60, 60, 0.4); }
+        .card-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .card:hover .card-image { transform: scale(1.1); }
+        .vip-glow {
+        color: #ffd700 !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #ffd700, 0 0 10px #ffc400;
+    }
+    .respected-glow {
+        color: #d8b2ff !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #c379ff, 0 0 10px #bf00ff;
+    }
+    .admin-glow {
+        color: #ff4d4d !important;
+        font-weight: bold;
+        text-shadow: 0 0 5px #ff4d4d, 0 0 10px #ff1a1a;
+    }
+        .card-body { position: absolute; bottom: 0; left: 0; right: 0; height: 70%; padding: 1.5rem; color: #fff; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 0.8) 50%, transparent 100%); transform: translateY(30%); transition: transform 0.5s ease; }
+        .card:hover .card-body { transform: translateY(0); }
+        .card-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .card-text { color: #ccc; margin-bottom: 1rem; font-size: 0.9rem; opacity: 0; transition: opacity 0.5s ease; }
+        .card:hover .card-text { opacity: 1; }
+        .card-text small { color: #999; font-style: italic; display: block; }
+        .btn-read-more { background-color: var(--dark-red); border: none; font-weight: bold; color: white; border-radius: 8px; padding: 10px; margin-top: 1rem; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .card:hover .btn-read-more { opacity: 1; transform: translateY(0); }
+        .btn-read-more:hover { background-color: var(--red); box-shadow: 0 0 15px rgba(255, 60, 60, 0.6); }
+        .question-box { background-color: var(--surface); border: 1px solid var(--dark-red); padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 0 15px rgba(255, 26, 26, 0.15); transition: all 0.3s ease; }
+        .question-box:hover { transform: translateY(-5px); box-shadow: 0 5px 25px rgba(255, 26, 26, 0.25); border-color: var(--red); }
+        .question-text { font-size: 1.1rem; color: #eee; margin-bottom: 0.5rem;}
+        .question-meta { font-size: 0.9rem; color: #888; text-align: right;}
+        .modal-content { background-color: var(--surface); border: 1px solid var(--red); }
+        .modal-header, .modal-footer { border-bottom-color: var(--dark-red); border-top-color: var(--dark-red); }
+        .form-control { background-color: var(--background); color: white; border-color: var(--dark-red); }
+        .form-control:focus { background-color: var(--background); color: white; border-color: var(--red); box-shadow: 0 0 10px var(--red); }
+    </style>
+</head>
+<body>
+{% include 'header.html' %}
+
+<div class="profile-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="profile-header">
+        <div class="profile-banner"></div>
+        <div class="profile-avatar-wrapper">
+            <img class="profile-avatar" src="{{ user.avatar_url or 'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg' }}" alt="Profile Picture">
+        </div>
+        <div class="profile-info">
+            <h1 class="profile-username">{{ user.username }}</h1>
+            <p class="profile-bio">{{ user.bio or 'No bio set. Click Edit Profile to add one.' }}</p>
+        </div>
+        <button class="btn btn-sm edit-profile-btn" data-toggle="modal" data-target="#editProfileModal">
+            <i class="bi bi-pencil-fill"></i> Edit Profile
+        </button>
+    </div>
+
+    <div class="posts-section">
+        <h2 class="content-title">დადებული პოსტები</h2>
+        <div class="card-box">
+            {% for post in posts %}
+            <div class="card" style="animation-delay: {{ loop.index0 * 0.07 }}s;">
+                <img class="card-image" src="{{ post.imageURL }}" alt="Post Image">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.short_description }}<small>ავტორი: {{ post.author }}</small></p>
+                    </div>
+                    <a href="/posts/{{ post.id }}" class="btn btn-read-more btn-block">წაკითხვა</a>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center col-12">თქვენ ჯერ არ დაგიდიათ პოსტი.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="questions-section">
+    <h2 class="content-title">კითხვები</h2>
+    <div class="questions-list">
+        {% for q in questions %}
+        <div class="question-box">
+            <p class="question-text"><strong>თქვენი კითხვა:</strong> {{ q.question }}</p>
+            {% if q.response %}
+                <p class="question-text text-success"><strong>პასუხი:</strong> {{ q.response }}</p>
+            {% else %}
+                <p class="question-meta text-muted">პასუხი ჯერ არ არსებობს</p>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="text-center">თქვენ ჯერ არ დაგისვამთ კითხვა.</p>
+        {% endfor %}
+    </div>
+</div>
+
+</div>
+
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profile</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <form method="POST" action="{{ url_for('update_profile') }}">
+          <div class="modal-body">
+              <div class="form-group">
+                  <label for="banner_url">Banner URL</label>
+                  <input type="url" class="form-control" id="banner_url" name="banner_url" value="{{ user.banner_url or '' }}" required>
+              </div>
+              <div class="form-group">
+                  <label for="avatar_url">Avatar URL</label>
+                  <input type="url" class="form-control" id="avatar_url" name="avatar_url" value="{{ user.avatar_url or '' }}" required>
+              </div>
+              <div class="form-group">
+                  <label for="bio">Bio</label>
+                  <textarea class="form-control" id="bio" name="bio" rows="4" maxlength="300" placeholder="Tell us about yourself...">{{ user.bio or '' }}</textarea>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-danger" style="background-color: var(--red);">Save Changes</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

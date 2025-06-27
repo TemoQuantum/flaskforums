@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/vt323/css/vt323.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-G1LAlQ9cZn7YASvM+vK1NEFnUwZEK2Z9ZovMe5PFDmOKEr/OzNC+7i0BQbcYhbdkYtZsfz9IFsLscBWRvWqk+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s" />
+  <title>Leaks</title>
+
+  <style>
+    /* --- RED RETRO HACKING DESIGN V2 --- */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0a0a0a, #1a0000);
+      color: #eee;
+      font-family: 'VT323', monospace;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-box {
+      flex-grow: 1;
+      width: 90%;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.2);
+    }
+
+    ul.nav-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul.nav-menu > li {
+      margin-bottom: 15px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 80, 80, 0.3);
+      transition: all 0.4s ease;
+    }
+
+    ul.nav-menu > li:hover {
+        border-color: rgba(255, 80, 80, 0.6);
+        box-shadow: 0 0 15px rgba(255, 80, 80, 0.2);
+    }
+
+    ul.nav-menu li button {
+      width: 100%;
+      background: rgba(255, 0, 0, 0.1);
+      border: none;
+      color: #ff9a9a;
+      padding: 12px 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-shadow: 0 0 6px rgba(255, 80, 80, 0.5);
+    }
+
+    ul.nav-menu li button:hover {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ffcici;
+    }
+
+    ul.nav-menu li button[aria-expanded="true"] {
+      background: rgba(255, 0, 0, 0.25);
+      color: #fff;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .arrow {
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      font-size: 1.2rem;
+    }
+
+    .arrow.rotate {
+      transform: rotate(90deg);
+    }
+
+    .submenu-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s ease-in-out;
+    }
+
+    li.open .submenu-wrapper {
+        grid-template-rows: 1fr;
+    }
+
+    ul.submenu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background-color: rgba(0, 0, 0, 0.3);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .submenu-content {
+        padding: 15px 20px;
+        border-top: 1px solid rgba(255, 80, 80, 0.3);
+    }
+
+    ul.submenu li {
+      padding: 6px 0;
+    }
+
+    ul.submenu li a {
+      color: #ffb8b8;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    ul.submenu li a::before {
+      content: '>';
+      margin-right: 12px;
+      color: rgba(255, 80, 80, 0.8);
+    }
+
+    ul.submenu li a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 8px #ff8a8a;
+      transform: translateX(5px);
+    }
+
+    /* --- NEW STYLIZED FOOTER --- */
+    footer {
+      padding: 25px;
+      text-align: center;
+      color: #999;
+      font-size: 1rem;
+      text-shadow: 0 0 5px rgba(255, 80, 80, 0.4);
+      background: #080808;
+      border-top: 1px solid rgba(255, 80, 80, 0.5);
+      box-shadow: inset 0 15px 25px -15px #000;
+      position: relative;
+    }
+
+    /* Blinking cursor effect for the footer */
+    footer::after {
+      content: '_';
+      animation: blink 1s infinite step-start;
+      color: #ff5050;
+      margin-left: 8px;
+      font-weight: bold;
+      text-shadow: 0 0 5px #ff5050;
+    }
+  </style>
+</head>
+<body>
+  {% include "header.html" %}
+
+  <div class="main-box">
+    <ul class="nav-menu">
+      <li>
+        <button aria-expanded="false" aria-controls="courses-submenu">
+          <span class="btn-content">
+            <i class="fas fa-book-open"></i> Courses
+          </span>
+          <span class="arrow"><i class="fas fa-caret-right"></i></span>
+        </button>
+        <div class="submenu-wrapper">
+          <ul class="submenu" id="courses-submenu">
+            <div class="submenu-content">
+              <li><a href="#">SCSA cyber security course</a></li>
+              <li><a href="https://anonymfile.com/39aPq/kiu.rar">KIU math (Calculus I and II)</a></li>
+              <li><a href="https://anonymfile.com/QpkE6/at-youtube.pdf">Youtube channel course (Gigi Kurtanidze)</a></li>
+            </div>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <button aria-expanded="false" aria-controls="databases-submenu">
+          <span class="btn-content">
+            <i class="fas fa-database"></i> Databases
+          </span>
+          <span class="arrow"><i class="fas fa-caret-right"></i></span>
+        </button>
+        <div class="submenu-wrapper">
+          <ul class="submenu" id="databases-submenu">
+             <div class="submenu-content">
+              <li><a href="/lookup">Georgian citizens database</a></li>
+              <li><a href="#">---</a></li>
+            </div>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <button aria-expanded="false" aria-controls="vulnerabilities-submenu">
+          <span class="btn-content">
+            <i class="fas fa-bug"></i> Vulnerabilities (at 100 members)
+          </span>
+          <span class="arrow"><i class="fas fa-caret-right"></i></span>
+        </button>
+        <div class="submenu-wrapper">
+          <ul class="submenu" id="vulnerabilities-submenu">
+            <div class="submenu-content">
+              </div>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <button aria-expanded="false" aria-controls="methods-submenu">
+          <span class="btn-content">
+            <i class="fas fa-flask"></i> Methods
+          </span>
+          <span class="arrow"><i class="fas fa-caret-right"></i></span>
+        </button>
+        <div class="submenu-wrapper">
+          <ul class="submenu" id="methods-submenu">
+            <div class="submenu-content">
+              <li><a href="/leaks/e-whoring">E-whoring</a></li>
+              <li><a href="/leaks/carding/GlovoWolt">Glovo & Wolt carding</a></li>
+              <li><a href="/leaks/carding">Carding</a></li>
+            </div>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  {% include "footer.html" %}
+
+  <script>
+    document.querySelectorAll('.nav-menu > li > button').forEach(button => {
+      button.addEventListener('click', () => {
+        const li_parent = button.parentElement;
+        const is_open = li_parent.classList.contains('open');
+
+        document.querySelectorAll('.nav-menu > li').forEach(item => {
+            if (item !== li_parent) {
+                item.classList.remove('open');
+                item.querySelector('button').setAttribute('aria-expanded', 'false');
+                item.querySelector('.arrow').classList.remove('rotate');
+            }
+        });
+
+        if (!is_open) {
+            li_parent.classList.add('open');
+            button.setAttribute('aria-expanded', 'true');
+            button.querySelector('.arrow').classList.add('rotate');
+        } else {
+            li_parent.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+            button.querySelector('.arrow').classList.remove('rotate');
+        }
+      });
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

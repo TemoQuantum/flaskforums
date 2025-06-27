@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ announcement.title }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.web-fonts.ge/fonts/alk-sanet/css/alk-sanet.min.css">
+    <link rel="icon" type="image/png" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzv-UWrgudsQRv6CGw-bKL8Jo6HJRaNCjH5A&s">
+    <style>
+        :root { --red: #ff1a1a; }
+        body { background: linear-gradient(135deg, #1a0000, #330000); font-family: "ALK Sanet", sans-serif; color: #ffffff; }
+        .post-container { max-width: 900px; margin: 4% auto; padding: 40px; background-color: rgba(0,0,0,0.2); border-radius: 16px; }
+        .post-title { font-size: 3rem; font-weight: bold; text-align: center; color: #fff; text-shadow: 0 0 15px var(--red); }
+        .post-image { width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; margin-top: 20px; margin-bottom: 30px; }
+        .post-content { font-size: 1.1rem; line-height: 1.8; color: #eee; }
+    </style>
+</head>
+<body>
+{% include "header.html" %}
+<div class="container">
+    <div class="post-container">
+        <h1 class="post-title">{{ announcement.title }}</h1>
+        <hr style="background-color: #555;">
+        <img src="{{ announcement.imageURL }}" alt="{{ announcement.title }}" class="post-image">
+        <div class="post-content">
+            <p>{{ announcement.description }}</p>
+            <hr style="background-color: #555;">
+            <p>{{ announcement.post_part1 }}</p>
+        </div>
+    </div>
+</div>
+{% include "footer.html" %}
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
