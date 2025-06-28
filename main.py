@@ -22,16 +22,168 @@ app = Flask(__name__)
 app.secret_key = '12345'
 
 UPLOAD_FOLDER = 'static/chat_uploads'
+HACKING_FOLDER = 'static/hacking_uploads'
+CARDING_FOLDER = 'static/carding_uploads'
+MARKETPLACE_FOLDER = 'static/marketplace_uploads'
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'webm', 'mov', 'jfif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['HACKING_FOLDER'] = HACKING_FOLDER
+app.config['CARDING_FOLDER'] = CARDING_FOLDER
+app.config['MARKETPLACE_FOLDER'] = MARKETPLACE_FOLDER
+
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(MARKETPLACE_FOLDER, exist_ok=True)
+@app.route('/marketplace_media', methods=['POST'])
+def marketplace_media():
+    if 'file' not in request.files: return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '': return jsonify({'error': 'No selected file'}), 400
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['MARKETPLACE_FOLDER'], filename)
+
+    media_type = 'video' if file.mimetype.startswith('video/') else 'image'
+
+    try:
+        # 1. Save the uploaded file first
+        file.save(filepath)
+
+        # 2. Process the saved file to strip metadata
+        if media_type == 'image':
+            with Image.open(filepath) as image:
+                # This process removes EXIF data
+                data = list(image.getdata())
+                image_without_exif = Image.new(image.mode, image.size)
+                image_without_exif.putdata(data)
+                image_without_exif.save(filepath)
+
+        elif media_type == 'video':
+            try:
+                # This process removes metadata tags from video/audio
+                video_file = mutagen.File(filepath)
+                if video_file:
+                    video_file.delete()
+                    video_file.save()
+            except Exception as e:
+                # If mutagen fails, the original file remains. Log the error.
+                logging.error(f"Could not strip metadata from video '{filename}': {e}")
+                pass
+
+    except Exception as e:
+        logging.error(f"Failed to process and save file '{filename}': {e}")
+        return jsonify({'error': 'Failed to process file.'}), 500
+
+    return jsonify({
+        'url': f'/static/marketplace_uploads/{filename}',
+        'media_type': media_type
+    })
+
+
+os.makedirs(HACKING_FOLDER, exist_ok=True)
+@app.route('/hacking_media', methods=['POST'])
+def hacking_media():
+    if 'file' not in request.files: return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '': return jsonify({'error': 'No selected file'}), 400
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['HACKING_FOLDER'], filename)
+
+    media_type = 'video' if file.mimetype.startswith('video/') else 'image'
+
+    try:
+        # 1. Save the uploaded file first
+        file.save(filepath)
+
+        # 2. Process the saved file to strip metadata
+        if media_type == 'image':
+            with Image.open(filepath) as image:
+                # This process removes EXIF data
+                data = list(image.getdata())
+                image_without_exif = Image.new(image.mode, image.size)
+                image_without_exif.putdata(data)
+                image_without_exif.save(filepath)
+
+        elif media_type == 'video':
+            try:
+                # This process removes metadata tags from video/audio
+                video_file = mutagen.File(filepath)
+                if video_file:
+                    video_file.delete()
+                    video_file.save()
+            except Exception as e:
+                # If mutagen fails, the original file remains. Log the error.
+                logging.error(f"Could not strip metadata from video '{filename}': {e}")
+                pass
+
+    except Exception as e:
+        logging.error(f"Failed to process and save file '{filename}': {e}")
+        return jsonify({'error': 'Failed to process file.'}), 500
+
+    return jsonify({
+        'url': f'/static/hacking_uploads/{filename}',
+        'media_type': media_type
+    })
+
+
+os.makedirs(CARDING_FOLDER, exist_ok=True)
+@app.route('/carding_media', methods=['POST'])
+def carding_media():
+    if 'file' not in request.files: return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '': return jsonify({'error': 'No selected file'}), 400
+    if not file or not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file type'}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config['CARDING_FOLDER'], filename)
+
+    media_type = 'video' if file.mimetype.startswith('video/') else 'image'
+
+    try:
+        # 1. Save the uploaded file first
+        file.save(filepath)
+
+        # 2. Process the saved file to strip metadata
+        if media_type == 'image':
+            with Image.open(filepath) as image:
+                # This process removes EXIF data
+                data = list(image.getdata())
+                image_without_exif = Image.new(image.mode, image.size)
+                image_without_exif.putdata(data)
+                image_without_exif.save(filepath)
+
+        elif media_type == 'video':
+            try:
+                # This process removes metadata tags from video/audio
+                video_file = mutagen.File(filepath)
+                if video_file:
+                    video_file.delete()
+                    video_file.save()
+            except Exception as e:
+                # If mutagen fails, the original file remains. Log the error.
+                logging.error(f"Could not strip metadata from video '{filename}': {e}")
+                pass
+
+    except Exception as e:
+        logging.error(f"Failed to process and save file '{filename}': {e}")
+        return jsonify({'error': 'Failed to process file.'}), 500
+
+    return jsonify({
+        'url': f'/static/carding_uploads/{filename}',
+        'media_type': media_type
+    })
 
 
 @app.route('/upload_media', methods=['POST'])
@@ -587,9 +739,15 @@ def clear_chat_carding():
 def handle_marketplace_chat(data):
     username = session.get('user_name')
     time_now = datetime.now().strftime('%H:%M:%S')
-    msg = bleach.clean(data.get('msg', ''))[:500]
-    img = data.get('img')
-    message = {'user': username, 'msg': msg, 'img': img, 'time': time_now}
+
+    message = {
+        'user': username,
+        'msg': bleach.clean(data.get('msg', ''))[:500],
+        'media_url': data.get('media_url'),
+        'media_type': data.get('media_type'),
+        'time': time_now
+    }
+
     messages_marketplace.append(message)
     socketio.emit('marketplace_message', message)
 
@@ -681,8 +839,25 @@ def handle_send(data):
 
 @socketio.on('load')
 def handle_load():
+    emit('message', {'msg': 'Welcome to main chat'}, to=request.sid)
     for m in messages:
         emit('message', m)
+
+@socketio.on('load_hacking')
+def handle_load_hacking():
+    for m in messages_hacking:
+        emit('hacking_message', m)
+
+@socketio.on('load_carding')
+def handle_load_carding():
+    for m in messages_carding:
+        emit('carding_message', m)
+
+@socketio.on('load_marketplace')
+def handle_load_marketplace():
+    for m in messages_marketplace:
+        emit('marketplace_message', m)
+
 
 
 @app.route('/profile')
